@@ -29,7 +29,3 @@ for row in x1.values:
 
 #df.to_csv('output.csv')
 
-
-        
-    
-
