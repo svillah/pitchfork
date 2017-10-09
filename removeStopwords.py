@@ -1,31 +1,32 @@
 import stop
 import pandas as pd
+import csv
 
 # create a dataframe from output csv of scrape.py
 df = pd.read_csv('output.csv')
 df.columns = ["artist","rating","album", "best_new_tag", "genre", "publish_date", "abstract"]
 
-# isolate abstract field particularly
-x1 = df[["abstract"]]
-
 #album abstracts before removing stop words
+x1 = df[["abstract"]]
 print(x1)
 
 # parse and remove stop words
 i = 1
-for row in x1.values:
-    words = str(row)
+for index, row in df.iterrows():
+    words = str(row['abstract'])
     parse = words.split()
 
     resultList = [word for word in parse if word.lower() not in stop.stopwords]
     result = ' '.join(resultList)
+    result.replace('"','')
 
     #abstracts after removing stop words
     print(result)
 
-    df.at[i,7] = result #fio how to replace current element with new result!!!!
+    #replace df cell with new abstract
+    df.loc[index,'abstract'] = result 
     
     i+=1
 
-#df.to_csv('output.csv')
+df.to_csv('refined.csv', index=False)
 
