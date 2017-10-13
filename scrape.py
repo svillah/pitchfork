@@ -9,8 +9,11 @@ pitchforkUrl = "https://pitchfork.com/"
 my_list = []
 
 def artist(soup):
-    name = soup.find("h2",{"class":"artists"}).string.encode('utf-8')
-    return(name)
+    name = soup.find("h2",{"class":"artists"})
+    for li in name.findAll('a'):
+        artist = []
+        artist.append(li.string.encode('utf-8'))
+    return(''.join(map(str, artist)))
 
 def rate(soup):
     rating = soup.find("span", {"class":"score"}).string
@@ -65,7 +68,7 @@ def review(url): #gets all metadata from each album review and puts it into a li
 
 
 # iterates through every page of 'Reviews' and finds URLs
-while (pageNum < 2):
+while (pageNum < 10):
     website = "https://pitchfork.com/reviews/albums/?page=" + str(pageNum)
     soup = initializeSoup(website)
 
