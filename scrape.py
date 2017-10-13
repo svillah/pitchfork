@@ -10,8 +10,8 @@ my_list = []
 
 def artist(soup):
     name = soup.find("h2",{"class":"artists"})
+    artist = []
     for li in name.findAll('a'):
-        artist = []
         artist.append(li.string.encode('utf-8'))
     return(''.join(map(str, artist)))
 
@@ -43,7 +43,17 @@ def abstract(soup): # short summary of album before actual review
     desc = soup.find('div', {'class':'abstract'}).text.encode('utf-8').rstrip()
     return(desc)
 
-#to be cont: pull whole review
+def fullDesc(soup):
+    desc = soup.find('div', {'class':'clearfix'})
+    detail = desc.find('div', {'class':'contents'})
+    paragraph = []
+    VALID_TAGS = ['div', 'p']
+    for para in detail.findAll('p'):
+        if para.name not in VALID_TAGS:
+            para.replaceWith(para.renderContents())
+        paragraph.append(para.get_text().encode('utf-8'))
+    return(' '.join(map(str, paragraph)))
+  
     
 def initializeSoup(url):
     request = requests.get(url)
@@ -62,13 +72,14 @@ def review(url): #gets all metadata from each album review and puts it into a li
     lst.append(genre(soup))
     lst.append(pubDate(soup))
     lst.append(abstract(soup))
+    lst.append(fullDesc(soup))
     print(lst)
     
     my_list.append(lst)
 
 
 # iterates through every page of 'Reviews' and finds URLs
-while (pageNum < 10):
+while (pageNum < 2):
     website = "https://pitchfork.com/reviews/albums/?page=" + str(pageNum)
     soup = initializeSoup(website)
 
@@ -83,7 +94,7 @@ while (pageNum < 10):
     pageNum+=1
 
 # write to csv
-with open("output.csv", "wb") as f:
+with open("output.csv", "a") as f:
     writer = csv.writer(f)
     writer.writerows(my_list)
         
