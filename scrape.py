@@ -4,7 +4,7 @@ import requests
 from bs4 import BeautifulSoup
 import csv
 
-pageNum = 1
+pageNum = 71
 pitchforkUrl = "https://pitchfork.com/"
 my_list = []
 
@@ -79,7 +79,7 @@ def review(url): #gets all metadata from each album review and puts it into a li
 
 
 # iterates through every page of 'Reviews' and finds URLs
-while (pageNum < 2):
+while (pageNum < 81):
     website = "https://pitchfork.com/reviews/albums/?page=" + str(pageNum)
     soup = initializeSoup(website)
 
@@ -94,7 +94,7 @@ while (pageNum < 2):
     pageNum+=1
 
 # write to csv
-with open("output.csv", "a") as f:
+with open("output71-80.csv", "a") as f:
     writer = csv.writer(f)
     writer.writerows(my_list)
         
